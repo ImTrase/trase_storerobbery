@@ -1,0 +1,12 @@
+{
+    "shoot_help_text": "Shoot to scare the shop owner.",
+    "collect_bag": "[E] - Collect Bag.",
+
+    "bag_pickup_title": "Collected Bag!",
+    "bag_pickup_description": "Successfully robbed the gas station, now run!",
+
+    "dispatch_label": "Dispatch:",
+    "dispatch_description": "A suspect has been spotted robbing a store!",
+    "dispatch_brevity_code": "10-31"
+
+}
