@@ -34,7 +34,7 @@ RegisterNetEvent('trase_storerobbery:server:collectBag', function(storeId)
     legit[src] = nil
 
     SetTimeout(Config.Cooldown * 60000, function()
-        TriggerClientEvent('trase_storerobbery:server:setStore', -1, storeId, false)
+        TriggerClientEvent('trase_storerobbery:client:setStore', -1, storeId, false)
     end)
     
     TriggerClientEvent('trase_storerobbery:client:notify', src, { type = 'success', title = locale('bag_pickup_title'), message = locale('bag_pickup_description') })
@@ -48,7 +48,7 @@ RegisterNetEvent('trase_storerobbery:server:robberyStarted', function(storeId)
     legit[src] = true
 
     sync.alertPolice(store.Ped.Position)
-    TriggerClientEvent('trase_storerobbery:server:setStore', -1, storeId, true)
+    TriggerClientEvent('trase_storerobbery:client:setStore', -1, storeId, true)
 end)
 
 RegisterNetEvent('trase_storerobbery:server:robberyFailed', function(storeId)
@@ -58,7 +58,7 @@ RegisterNetEvent('trase_storerobbery:server:robberyFailed', function(storeId)
 
     legit[src] = nil
 
-    TriggerClientEvent('trase_storerobbery:server:setStore', -1, storeId, false)
+    TriggerClientEvent('trase_storerobbery:client:setStore', -1, storeId, false)
 end)
 
 RegisterNetEvent('trase_storerobbery:server:openSafe', function(data)
@@ -88,6 +88,7 @@ RegisterNetEvent('trase_storerobbery:server:openSafe', function(data)
         end
     end
 
+    sync.alertPolice(store.Ped.Position)
     TriggerClientEvent('trase_storerobbery:client:openSafe', src, store.Safe.AnimStart, storeId)
 
     if Config.Safes.CooldownOnAttempt then

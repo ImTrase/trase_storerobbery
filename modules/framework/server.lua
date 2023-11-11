@@ -58,6 +58,7 @@ if Config.Framework == 'esx' then
     end
 
     FRAMEWORK.getItem = function(target, item)
+        if item == 'cash' then item = 'money' end -- Conversion for QBCore
         local xPlayer = FRAMEWORK.getPlayer(target)
         if not xPlayer then return end
 
@@ -73,8 +74,44 @@ if Config.Framework == 'esx' then
     end
 elseif Config.Framework == 'qbcore' then
     QBCore = loadQBCore()
-    FRAMEWORK.getJob = function()
-        return QBCore.Functions.GetPlayerData().job.name
+
+    FRAMEWORK.getPlayer = function(target)
+        if not target then return end
+        local player = QBCore.Functions.GetPlayer(target)
+        if not player then return end
+        return player
+    end
+
+    local money_found = { 'cash', 'crypto', 'bank' }
+
+    FRAMEWORK.addItem = function(target, item, amount)
+        if item == 'money' then item = 'cash' end -- Conversion for ESX
+        local player = FRAMEWORK.getPlayer(target)
+        if not player then return end
+
+        if type(item) == 'string' then
+            if item == money_found then
+                player.Functions.AddMoney(item, amount)
+            else
+                player.Functions.AddItem(item, amount)
+            end
+        end
+    end
+
+    FRAMEWORK.getItem = function(target, item)
+        if item == 'money' then item = 'cash' end -- Conversion for ESX
+        local player = FRAMEWORK.getPlayer(target)
+        if not player then return end
+
+        if type(item) == 'string' then
+            if item == money_found then
+                return player.PlayerData.money
+            else
+                local itemData = player.Functions.GetItemByName(item)
+                if not itemData then return end
+                return itemData.count or itemData.amount or 0
+            end
+        end
     end
 end
 

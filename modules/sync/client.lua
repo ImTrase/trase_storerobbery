@@ -145,7 +145,7 @@ end
 
 function sync.failedRobbery(shop)
     TriggerServerEvent('trase_storerobbery:server:robberyFailed', shop.store)
-    SetTimeout(60000, function()
+    SetTimeout(Config.Cooldown * 60000, function()
         DeleteEntity(shop.entity)
 
         for k, v in pairs(Config.Stores) do
@@ -220,7 +220,7 @@ function sync.robbingShop(shop)
         progressBarTimer = GetGameTimer()
     end
 
-    if IsPedDeadOrDying(entity) or sync.isPlayerDead() then return sync.failedRobbery(shop.store) end
+    if IsPedDeadOrDying(entity) or sync.isPlayerDead() then return sync.failedRobbery(shop) end
 
     SetEntityCoords(entity, Config.Stores[shop.store].Ped.Position)
     lib.requestAnimDict('mp_am_hold_up')
@@ -233,7 +233,7 @@ function sync.robbingShop(shop)
         Wait(0)
     end
 
-    if IsPedDeadOrDying(entity) or sync.isPlayerDead() then return sync.failedRobbery(shop.store) end
+    if IsPedDeadOrDying(entity) or sync.isPlayerDead() then return sync.failedRobbery(shop) end
 
     local pedCoords = GetEntityCoords(entity)
 
@@ -255,7 +255,7 @@ function sync.robbingShop(shop)
         Wait(0)
     end
 
-    if IsPedDeadOrDying(entity) or sync.isPlayerDead() then return sync.failedRobbery(shop.store) end
+    if IsPedDeadOrDying(entity) or sync.isPlayerDead() then return sync.failedRobbery(shop) end
 
     DetachEntity(bag, true, false)
 

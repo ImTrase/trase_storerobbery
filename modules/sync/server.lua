@@ -1,5 +1,9 @@
 local sync = {}
 
+local GetResourceState <const> = GetResourceState
+local TriggerEvent <const> = TriggerEvent
+local TriggerClientEvent <const> = TriggerClientEvent
+
 function sync.alertPolice(coords)
 
     if GetResourceState("qs-dispatch") == "started" then
