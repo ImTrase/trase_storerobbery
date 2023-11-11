@@ -47,7 +47,7 @@ Config.Safes = { -- Safe Configuration
     CooldownOnAttempt = true, -- Enable cooldown as soon as a player attempts to open the safe.
 }
 
-Config.PoliceJobs = { 'police', 'sheriff', 'unemployed' } -- Used in disatch, dispatch can be edited in modules/sync/server.lua
+Config.PoliceJobs = { 'police', 'sheriff' } -- Used in disatch, dispatch can be edited in modules/sync/server.lua
 Config.Alarm = {
     Enabled = true, -- Enable or disable the alarm.
     Time = 4, -- Time in minutes until the alarm is disabled. (Make this matches up with the progress bar duration)
