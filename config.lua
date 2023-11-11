@@ -2,7 +2,7 @@ Config = {}
 
 Config.Framework = 'auto' -- auto, esx, qbcore (custom setup in modules/framework)
 Config.Cooldown = 5 -- Time (in minutes) until the store is reset.
-Config.Target = true -- Enable 3-erd eye (requires: ox_target)
+Config.Target = false -- Enable 3-erd eye (requires: ox_target)
 
 Config.Progress = {
     Duration = 180, -- Time in seconds it takes to complete the NPC robbery.
@@ -48,6 +48,11 @@ Config.Safes = { -- Safe Configuration
 }
 
 Config.PoliceJobs = { 'police', 'sheriff', 'unemployed' } -- Used in disatch, dispatch can be edited in modules/sync/server.lua
+Config.Alarm = {
+    Enabled = true, -- Enable or disable the alarm.
+    Time = 4, -- Time in minutes until the alarm is disabled. (Make this matches up with the progress bar duration)
+    Distance = 70.0 -- Distance on how far the alarm can be heard.
+}
 
 Config.Stores = {
     [1] = {
@@ -77,7 +82,7 @@ Config.Stores = {
                 -- ['marked_bills'] = { 1, 2 }, -- Min, Max (QBCore Example)
             }
         },
-    }
+    },
 }
 
 Config.Notification = function(data)

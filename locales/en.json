@@ -1,6 +1,7 @@
 {
     "shoot_help_text": "Shoot to scare the shop owner.",
     "collect_bag": "[E] - Collect Bag.",
+    "open_safe": "[E] - Hack Safe.",
 
     "bag_pickup_title": "Collected Bag!",
     "bag_pickup_description": "Successfully robbed the gas station, now run!",

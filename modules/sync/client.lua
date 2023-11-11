@@ -1,5 +1,6 @@
 local sync = {}
 local createdEntitys = {}
+local crackingSafe = false
 
 -- Declaring all used natives (performance)
 local CreatePed <const> = CreatePed
@@ -315,22 +316,52 @@ function sync.clearEntitys()
     end
 end
 
-function sync.addSafe(v, store)
-    local size = 0.7
+local textUi = false
 
-    exports.ox_target:addBoxZone({
-        coords = v.Safe.TargetCoords,
-        debug = false,
-        size = vec3(size, size, size + 0.2),
-        options = {
-            {
-                label = locale('safe_label'),
-                icon = locale('safe_icon'),
-                serverEvent = 'trase_storerobbery:server:openSafe',
-                args = store
+function sync.addSafe(v, store)
+    if Config.Target then
+        local size = 0.7
+
+        exports.ox_target:addBoxZone({
+            coords = v.Safe.TargetCoords,
+            debug = false,
+            size = vec3(size, size, size + 0.2),
+            options = {
+                {
+                    label = locale('safe_label'),
+                    icon = locale('safe_icon'),
+                    serverEvent = 'trase_storerobbery:server:openSafe',
+                    args = store
+                }
             }
-        }
-    })
+        }) 
+    else
+        local point = lib.points.new({ coords = v.Safe.MarkerCoords, distance = 5 })
+   
+        function point:nearby()
+            if not crackingSafe then
+                DrawMarker(2, self.coords.x, self.coords.y, self.coords.z, 0.0, 0.0, 0.0, 0.0, 180.0, 0.0, 0.4, 0.4, 0.4, 200, 20, 20, 50, false, true, 2, false, nil, nil, false)
+                
+                if self.currentDistance < 1.2 then
+                    if not textUi then
+                        textUi = true
+                        lib.showTextUI(locale('open_safe'))
+                    end
+
+                    if IsControlJustPressed(0, 38) then
+                        crackingSafe = true
+                        lib.hideTextUI()
+                        TriggerServerEvent('trase_storerobbery:server:openSafe', { args = store })
+                    end
+                else
+                    if textUi then
+                        textUi = false
+                        lib.hideTextUI()
+                    end
+                end
+            end
+        end
+    end
 end
 
 local ANIMATION_LIB <const> = {
@@ -376,6 +407,7 @@ end
 
 RegisterNetEvent('trase_storerobbery:client:openSafe', function(coords, storeId)
     if (GlobalState['trase_storerobbery:store:safe' .. storeId]) then
+        crackingSafe = false
         return Config.Notification({ type = 'error', title = locale('please_wait_safe'), message = locale('please_wait_safe_message') })
     end
 
@@ -399,6 +431,7 @@ RegisterNetEvent('trase_storerobbery:client:openSafe', function(coords, storeId)
         end
         Wait(1000)
         hacking = false
+        crackingSafe = false
     end)
  
     while hacking do
