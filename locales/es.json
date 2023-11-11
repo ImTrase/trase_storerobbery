@@ -1,0 +1,22 @@
+{
+    "shoot_help_text": "Dispara para asustar al dueño de la tienda.",
+    "collect_bag": "[E] - Recoger Bolsa.",
+    "open_safe": "[E] - Hackear Caja Fuerte.",
+    "bag_pickup_title": "¡Bolsa Recogida!",
+    "bag_pickup_description": "¡Robaste con éxito la gasolinera, ahora corre!",
+    "dispatch_label": "Despacho:",
+    "dispatch_description": "¡Se ha avistado a un sospechoso robando una tienda!",
+    "dispatch_brevity_code": "10-31",
+    "safe_icon": "fa-solid fa-vault",
+    "safe_label": "Hackear Caja Fuerte",
+    "safe_failed": "¡Falló!",
+    "safe_failed_message": "¡Fallaste al hackear la caja fuerte!",
+    "please_wait_safe": "En espera",
+    "please_wait_safe_message": "¡Esta caja fuerte fue hackeada recientemente! Por favor, inténtalo de nuevo más tarde.",
+    "safe_crack_title": "¡Caja Fuerte Hackeada!",
+    "safe_crack_description": "Has hackeado con éxito la caja fuerte, ¡ahora corre!",
+    "safe_no_items": "¡Faltan Artículos!",
+    "safe_no_items_message": "Esta caja fuerte requiere herramientas específicas, ¡por favor, ve a conseguirlas!",
+    "rouge_title": "¡Denegado!",
+    "rouge_message": "El dueño de la tienda se niega a ser robado, ¡está luchando de vuelta!"
+}

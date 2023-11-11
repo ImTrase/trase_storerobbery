@@ -1,0 +1,22 @@
+{
+    "shoot_help_text": "Skjut för att skrämma affärsägaren.",
+    "collect_bag": "[E] - Samla påse.",
+    "open_safe": "[E] - Hacka kassaskåp.",
+    "bag_pickup_title": "Plockad påse!",
+    "bag_pickup_description": "Lyckades råna bensinstationen, spring nu!",
+    "dispatch_label": "Dispatch:",
+    "dispatch_description": "En misstänkt har setts råna en affär!",
+    "dispatch_brevity_code": "10-31",
+    "safe_icon": "fa-solid fa-vault",
+    "safe_label": "Knacka kassaskåp",
+    "safe_failed": "Misslyckades!",
+    "safe_failed_message": "Du misslyckades med att hacka kassaskåpet!",
+    "please_wait_safe": "Nedkylning",
+    "please_wait_safe_message": "Det här kassaskåpet hackades nyligen! Försök igen senare.",
+    "safe_crack_title": "Knackat kassaskåp!",
+    "safe_crack_description": "Du har framgångsrikt knäckt kassaskåpet, spring nu!",
+    "safe_no_items": "Saknar föremål!",
+    "safe_no_items_message": "Det här kassaskåpet kräver specifika verktyg, vänligen hämta dem!",
+    "rouge_title": "Nej!",
+    "rouge_message": "Affärsägaren vägrar att bli rånad, han slåss tillbaka!"
+}

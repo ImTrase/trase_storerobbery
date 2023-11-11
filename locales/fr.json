@@ -1,0 +1,22 @@
+{
+    "shoot_help_text": "Tirez pour effrayer le propriétaire du magasin.",
+    "collect_bag": "[E] - Ramasser le sac.",
+    "open_safe": "[E] - Pirater le coffre-fort.",
+    "bag_pickup_title": "Sac ramassé !",
+    "bag_pickup_description": "Vous avez réussi à cambrioler la station-service, maintenant fuyez !",
+    "dispatch_label": "Dispatch :",
+    "dispatch_description": "Un suspect a été repéré en train de voler un magasin !",
+    "dispatch_brevity_code": "10-31",
+    "safe_icon": "fa-solid fa-vault",
+    "safe_label": "Pirater le coffre-fort",
+    "safe_failed": "Échec !",
+    "safe_failed_message": "Vous avez échoué à pirater le coffre-fort !",
+    "please_wait_safe": "Refroidissement",
+    "please_wait_safe_message": "Ce coffre-fort a été récemment piraté ! Veuillez réessayer plus tard.",
+    "safe_crack_title": "Coffre-fort piraté !",
+    "safe_crack_description": "Vous avez réussi à pirater le coffre-fort, maintenant fuyez !",
+    "safe_no_items": "Articles manquants !",
+    "safe_no_items_message": "Ce coffre-fort nécessite des outils spécifiques, veuillez les obtenir !",
+    "rouge_title": "Refusé !",
+    "rouge_message": "Le propriétaire du magasin refuse d'être volé, il se défend !"
+}
