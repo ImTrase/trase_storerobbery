@@ -4,8 +4,9 @@ Config.Framework = 'auto' -- auto, esx, qbcore (custom setup in modules/framewor
 Config.Cooldown = 5 -- Time (in minutes) until the store is reset.
 Config.GlobalCooldown = {
     Enabled = true, -- Enable or disable the global cooldown, if enabled after 1 store is robbed there is a time limit before another one can be robbed.
-    Time = 30 -- Time (in minutes) until another store is allowed to be robbed.
+    Time = 4 -- Time (in minutes) until another store is allowed to be robbed.
 }
+
 Config.Target = true -- Enable 3-erd eye (requires: ox_target)
 
 Config.Progress = {
