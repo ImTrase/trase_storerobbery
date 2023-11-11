@@ -324,7 +324,7 @@ function sync.addSafe(v, store)
 
         exports.ox_target:addBoxZone({
             coords = v.Safe.TargetCoords,
-            debug = true,
+            debug = false,
             rotation = v.Safe.TargetRotation or 0.0,
             size = vec3(size, size, size + 0.2),
             options = {
@@ -332,7 +332,16 @@ function sync.addSafe(v, store)
                     label = locale('safe_label'),
                     icon = locale('safe_icon'),
                     serverEvent = 'trase_storerobbery:server:openSafe',
-                    args = store
+                    args = store,
+                    canInteract = function()
+                        if sync.isPlayerDead() then return false end
+                        local cooldown = GlobalState.storeRobberyCooldown
+                        print(cooldown, store, GlobalState.storeRobberyCooldown)
+                        if cooldown and store ~= GlobalState.storeRobberyCooldown then
+                            return false
+                        end
+                        return true
+                    end
                 }
             }
         }) 

@@ -24,7 +24,7 @@ CreateThread(function()
         local armed = sync.isPlayerArmed()
         local job = Framework.getJob()
 
-        if armed and not Config.BlacklistedJobs[job] then
+        if armed and not Config.BlacklistedJobs[job] and not GlobalState.storeRobberyCooldown then
             local aiming = IsPlayerFreeAiming(cache.playerId)
             if aiming then
                 for _, shop in pairs(createdAssets) do

@@ -3,6 +3,7 @@ local sync = require 'modules.sync.server'
 lib.locale()
 
 local legit = {}
+GlobalState.storeRobberyCooldown = false
 
 local function ErrorPrint(...)
     print('^4[Trase_StoreRobbery] ^1[ERROR]^0: ', ...)
@@ -44,6 +45,14 @@ RegisterNetEvent('trase_storerobbery:server:robberyStarted', function(storeId)
     local src = source
     local store = Config.Stores[storeId]
     if not store then return end
+
+    if Config.GlobalCooldown then
+        GlobalState.storeRobberyCooldown = storeId
+
+        SetTimeout(Config.GlobalCooldown * 60000, function()
+            GlobalState.storeRobberyCooldown = false
+        end)
+    end
 
     legit[src] = true
 
@@ -124,6 +133,14 @@ RegisterNetEvent('trase_storerobbery:server:crackSafe', function(storeId)
 
         SetTimeout(Config.Safes.Cooldown * 60000, function()
             GlobalState['trase_storerobbery:store:safe' .. storeId] = false
+        end)
+    end
+
+    if Config.GlobalCooldown then
+        GlobalState.storeRobberyCooldown = storeId
+
+        SetTimeout(Config.GlobalCooldown * 60000, function()
+            GlobalState.storeRobberyCooldown = false
         end)
     end
 

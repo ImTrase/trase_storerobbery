@@ -2,10 +2,14 @@ Config = {}
 
 Config.Framework = 'auto' -- auto, esx, qbcore (custom setup in modules/framework)
 Config.Cooldown = 5 -- Time (in minutes) until the store is reset.
+Config.GlobalCooldown = {
+    Enabled = true, -- Enable or disable the global cooldown, if enabled after 1 store is robbed there is a time limit before another one can be robbed.
+    Time = 30 -- Time (in minutes) until another store is allowed to be robbed.
+}
 Config.Target = true -- Enable 3-erd eye (requires: ox_target)
 
 Config.Progress = {
-    Duration = 180, -- Time in seconds it takes to complete the NPC robbery.
+    Duration = 60, -- Time in seconds it takes to complete the NPC robbery.
     Increases = { Aiming = 0.3, Shooting = 5.7 }, -- How much the progress increases when aiming or shooting.
     Bar = { -- Progress bar
         Enabled = true, -- Enable or disable the progress bar.
