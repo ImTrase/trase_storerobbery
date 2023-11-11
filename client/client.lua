@@ -12,6 +12,12 @@ CreateThread(function()
         sync.replaceRegister(coords)
 
         createdAssets[#createdAssets +1] = { entity = ped, store = k }
+
+        if v.Safe.Enabled then
+            if Config.Target then
+                sync.addSafe(v, k)
+            end
+        end
     end
 
     while true do
@@ -89,3 +95,27 @@ end)
 function addToCreatedAssets(entity)
     createdAssets[#createdAssets +1] = entity
 end
+
+
+-- Config Checking:
+
+local HACKING_MINIGAMES <const> = {
+    ['ps-ui'] = true,
+    ['ultra-voltlab'] = true,
+    ['ultra-keypadhack'] = true,
+    ['datacrack'] = true,
+    ['electus_hacking'] = true,
+    ['howdy-hackminigame'] = true,
+}
+
+CreateThread(function()
+    if not HACKING_MINIGAMES[Config.Safes.Hack] then
+        Config.Safes.Hack = 'ps-ui'
+    else
+        for k, v in pairs(HACKING_MINIGAMES) do
+            if GetResourceState(k) == 'started' then
+                Config.Safes.Hack = k
+            end
+        end
+    end
+end)

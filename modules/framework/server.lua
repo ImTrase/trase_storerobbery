@@ -56,6 +56,21 @@ if Config.Framework == 'esx' then
             end
         end
     end
+
+    FRAMEWORK.getItem = function(target, item)
+        local xPlayer = FRAMEWORK.getPlayer(target)
+        if not xPlayer then return end
+
+        if type(item) == 'string' then
+            if item == money_found then
+                return xPlayer.getAccount(item).money
+            else
+                local itemData = xPlayer.getInventoryItem(item)
+                if not itemData then return end
+                return itemData.count
+            end
+        end
+    end
 elseif Config.Framework == 'qbcore' then
     QBCore = loadQBCore()
     FRAMEWORK.getJob = function()

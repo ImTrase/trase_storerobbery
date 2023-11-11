@@ -1,7 +1,59 @@
 local sync = {}
 local createdEntitys = {}
 
+-- Declaring all used natives (performance)
 local CreatePed <const> = CreatePed
+local SetEntityHeading <const> = SetEntityHeading
+local SetEntityAsMissionEntity <const> = SetEntityAsMissionEntity
+local SetPedHearingRange <const> = SetPedHearingRange
+local SetPedSeeingRange <const> = SetPedSeeingRange
+local SetPedAlertness <const> = SetPedAlertness
+local SetPedFleeAttributes <const> = SetPedFleeAttributes
+local SetBlockingOfNonTemporaryEvents <const> = SetBlockingOfNonTemporaryEvents
+local SetPedCombatAttributes <const> = SetPedCombatAttributes
+local SetPedDropsWeaponsWhenDead <const> = SetPedDropsWeaponsWhenDead
+local RequestModel <const> = RequestModel
+local HasModelLoaded <const> = HasModelLoaded
+local CreateObject <const> = CreateObject
+local AttachEntityToEntity <const> = AttachEntityToEntity
+local DetachEntity <const> = DetachEntity
+local GetEntityCoords <const> = GetEntityCoords
+local GetPedBoneIndex <const> = GetPedBoneIndex
+local DeleteEntity <const> = DeleteEntity
+local GetClosestObjectOfType <const> = GetClosestObjectOfType
+local DoesEntityExist <const> = DoesEntityExist
+local IsEntityDead <const> = IsEntityDead
+local HasEntityClearLosToEntityInFront <const> = HasEntityClearLosToEntityInFront
+local IsPedDeadOrDying <const> = IsPedDeadOrDying
+local TaskPlayAnim <const> = TaskPlayAnim
+local IsEntityPlayingAnim <const> = IsEntityPlayingAnim
+local GetGameTimer <const> = GetGameTimer
+local Wait <const> = Wait
+local DrawRect <const> = DrawRect
+local DrawText <const> = DrawText
+local SetTextFont <const> = SetTextFont
+local SetTextScale <const> = SetTextScale
+local SetTextColour <const> = SetTextColour
+local SetTextCentre <const> = SetTextCentre
+local SetTextDropshadow <const> = SetTextDropshadow
+local SetTextEdge <const> = SetTextEdge
+local SetTextEntry <const> = SetTextEntry
+local AddTextComponentString <const> = AddTextComponentString
+local PlaySoundFrontend <const> = PlaySoundFrontend
+local IsPlayerFreeAiming <const> = IsPlayerFreeAiming
+local GetAmmoInPedWeapon <const> = GetAmmoInPedWeapon
+local GetSelectedPedWeapon <const> = GetSelectedPedWeapon
+local IsControlPressed <const> = IsControlPressed
+local TriggerServerEvent <const> = TriggerServerEvent
+local CreateModelSwap <const> = CreateModelSwap
+local IsPedArmed <const> = IsPedArmed
+local SetTimeout <const> = SetTimeout
+local SetEntityCoords <const> = SetEntityCoords
+local ApplyForceToEntity <const> = ApplyForceToEntity
+local vector3 <const> = vector3
+local CreateThread <const> = CreateThread
+local IsControlJustPressed <const> = IsControlJustPressed
+local pairs <const> = pairs
 
 function sync.createPed(Data)
     lib.requestModel(Data.Ped.Model)
@@ -15,6 +67,7 @@ function sync.createPed(Data)
     SetBlockingOfNonTemporaryEvents(ped, true)
     SetPedCombatAttributes(ped, 46, true)
     SetPedFleeAttributes(ped, 0, false)
+    SetPedDropsWeaponsWhenDead(ped, false)
     return ped
 end
 
@@ -109,126 +162,111 @@ function sync.robbingShop(shop)
 
     local endTime = startTime + Config.Progress.Duration * 1000
     local progressBarTimer = startTime
+    sync.handsUp(shop.entity)
 
-    local rouge = Config.Stores[shop.store].Ped.Rouge
-    local chance = math.random(1, 100)
-    if rouge.Enabled and chance <= rouge.Chance then
-        GiveWeaponToPed(entity, rouge.Weapon, 1, false, true)
+    while isRobbing and not IsPedDeadOrDying(entity) and #(GetEntityCoords(ped) - GetEntityCoords(entity)) <= 7.5 and not sync.isPlayerDead() and progressBarTimer < endTime do
+        Wait(0)
 
-        -- while not IsPedDeadOrDying(entity) and #(GetEntityCoords(ped) - GetEntityCoords(entity)) <= 7.5 and not sync.isPlayerDead() do
-        --     Wait(0)
+        draw2dText()
 
-        --     TaskShootAtEntity(entity, cache.ped, 1000, -1, 2685983626)
-        -- end
+        speedAdjustment = adjustSpeed()
 
-        -- Test
-    else
-        sync.handsUp(shop.entity)
+        if Config.Progress.Bar.Enabled then
+            local timeRemaining = endTime - GetGameTimer()
+            local progressDelta = 100 * (1 - timeRemaining / ((endTime - startTime) + 1)) + speedAdjustment
+            drawProgressBar(progressDelta)
+        end
 
-        while isRobbing and not IsPedDeadOrDying(entity) and #(GetEntityCoords(ped) - GetEntityCoords(entity)) <= 7.5 and not sync.isPlayerDead() and progressBarTimer < endTime do
-            Wait(0)
-    
-            draw2dText()
-    
-            speedAdjustment = adjustSpeed()
-    
-            if Config.Progress.Bar.Enabled then
-                local timeRemaining = endTime - GetGameTimer()
-                local progressDelta = 100 * (1 - timeRemaining / ((endTime - startTime) + 1)) + speedAdjustment
-                drawProgressBar(progressDelta)
-            end
-    
-            progressBarTimer = GetGameTimer()
-        end
-    
-        if IsPedDeadOrDying(entity) or sync.isPlayerDead() then return sync.failedRobbery(shop.store) end
-    
-        SetEntityCoords(entity, Config.Stores[shop.store].Ped.Position)
-        lib.requestAnimDict('mp_am_hold_up')
-        TaskPlayAnim(entity, "mp_am_hold_up", "holdup_victim_20s", 8.0, -8.0, -1, 2, 0, false, false, false)
-        while not IsEntityPlayingAnim(entity, "mp_am_hold_up", "holdup_victim_20s", 3) do Wait(0) end
-    
-        local timer = GetGameTimer() + 10800
-        while timer >= GetGameTimer() do
-            if IsPedDeadOrDying(entity) or sync.isPlayerDead() then break end
-            Wait(0)
-        end
-    
-        if IsPedDeadOrDying(entity) or sync.isPlayerDead() then return sync.failedRobbery(shop.store) end
-    
-        local pedCoords = GetEntityCoords(entity)
-    
-        local cashRegister = GetClosestObjectOfType(pedCoords, 5.0, Config.CashRegister.Model)
-        if DoesEntityExist(cashRegister) then
-            CreateModelSwap(GetEntityCoords(cashRegister), 0.5, Config.CashRegister.Model, Config.CashRegister.BrokenModel, false)
-        end
-    
-        local model = `prop_poly_bag_01`
-        RequestModel(model)
-        while not HasModelLoaded(model) do Wait(0) end
-        local bag = CreateObject(model, pedCoords, false, false)
-        AttachEntityToEntity(bag, entity, GetPedBoneIndex(entity, 60309), 0.1, -0.11, 0.08, 0.0, -75.0, -75.0, 1, 1, 0, 0, 2, 1)
-        createdEntitys[#createdEntitys +1] = bag
-    
-        local timer = GetGameTimer() + 10000
-        while timer >= GetGameTimer() do
-            if IsPedDeadOrDying(entity) or sync.isPlayerDead() then break end
-            Wait(0)
-        end
-    
-        if IsPedDeadOrDying(entity) or sync.isPlayerDead() then return sync.failedRobbery(shop.store) end
-    
-        DetachEntity(bag, true, false)
-    
-        local timer = GetGameTimer() + 75
-        while timer >= GetGameTimer() do
-            if IsPedDeadOrDying(entity) or sync.isPlayerDead() then break end
-            Wait(0)
-        end
-    
-        SetEntityHeading(bag, Config.Stores[shop.store].Ped.Position.w)
-        ApplyForceToEntity(bag, 3, vector3(0.0, 75.0, 0.0), 0.0, 0.0, 0.0, 0, true, true, false, false, true)
-    
-        CreateThread(function()
-            local showntextUI = false
-            while true do
-                Wait(5)
-                if DoesEntityExist(bag) then
-                    local dist = #(GetEntityCoords(cache.ped) - GetEntityCoords(bag))
-                    if dist <= 1.5 then
-                        if not showntextUI then
-                            showntextUI = true
-                            lib.showTextUI(locale('collect_bag'))
-                        end
-    
-                        if (IsControlJustPressed(0, 38) and not sync.isPlayerDead()) then
-                            showntextUI = false
-                            lib.hideTextUI()
-                            lib.requestAnimDict('pickup_object')
-                            TaskPlayAnim(cache.ped, 'pickup_object', 'pickup_low', 8.0, -8.0, -1, 0, 0, false, false, false)
-                            Wait(1000)
-                            PlaySoundFrontend(-1, 'ROBBERY_MONEY_TOTAL', 'HUD_FRONTEND_CUSTOM_SOUNDSET', true)
-                            DeleteEntity(bag)
-                            TriggerServerEvent('trase_storerobbery:server:collectBag', shop.store)
-                            break
-                        end
-                    else
-                        if showntextUI then
-                            showntextUI = false
-                            lib.hideTextUI()
-                        end
+        progressBarTimer = GetGameTimer()
+    end
+
+    if IsPedDeadOrDying(entity) or sync.isPlayerDead() then return sync.failedRobbery(shop.store) end
+
+    SetEntityCoords(entity, Config.Stores[shop.store].Ped.Position)
+    lib.requestAnimDict('mp_am_hold_up')
+    TaskPlayAnim(entity, "mp_am_hold_up", "holdup_victim_20s", 8.0, -8.0, -1, 2, 0, false, false, false)
+    while not IsEntityPlayingAnim(entity, "mp_am_hold_up", "holdup_victim_20s", 3) do Wait(0) end
+
+    local timer = GetGameTimer() + 10800
+    while timer >= GetGameTimer() do
+        if IsPedDeadOrDying(entity) or sync.isPlayerDead() then break end
+        Wait(0)
+    end
+
+    if IsPedDeadOrDying(entity) or sync.isPlayerDead() then return sync.failedRobbery(shop.store) end
+
+    local pedCoords = GetEntityCoords(entity)
+
+    local cashRegister = GetClosestObjectOfType(pedCoords, 5.0, Config.CashRegister.Model)
+    if DoesEntityExist(cashRegister) then
+        CreateModelSwap(GetEntityCoords(cashRegister), 0.5, Config.CashRegister.Model, Config.CashRegister.BrokenModel, false)
+    end
+
+    local model = `prop_poly_bag_01`
+    RequestModel(model)
+    while not HasModelLoaded(model) do Wait(0) end
+    local bag = CreateObject(model, pedCoords, false, false)
+    AttachEntityToEntity(bag, entity, GetPedBoneIndex(entity, 60309), 0.1, -0.11, 0.08, 0.0, -75.0, -75.0, 1, 1, 0, 0, 2, 1)
+    createdEntitys[#createdEntitys +1] = bag
+
+    local timer = GetGameTimer() + 10000
+    while timer >= GetGameTimer() do
+        if IsPedDeadOrDying(entity) or sync.isPlayerDead() then break end
+        Wait(0)
+    end
+
+    if IsPedDeadOrDying(entity) or sync.isPlayerDead() then return sync.failedRobbery(shop.store) end
+
+    DetachEntity(bag, true, false)
+
+    local timer = GetGameTimer() + 75
+    while timer >= GetGameTimer() do
+        if IsPedDeadOrDying(entity) or sync.isPlayerDead() then break end
+        Wait(0)
+    end
+
+    SetEntityHeading(bag, Config.Stores[shop.store].Ped.Position.w)
+    ApplyForceToEntity(bag, 3, vector3(0.0, 75.0, 0.0), 0.0, 0.0, 0.0, 0, true, true, false, false, true)
+
+    CreateThread(function()
+        local showntextUI = false
+        while true do
+            Wait(5)
+            if DoesEntityExist(bag) then
+                local dist = #(GetEntityCoords(cache.ped) - GetEntityCoords(bag))
+                if dist <= 1.5 then
+                    if not showntextUI then
+                        showntextUI = true
+                        lib.showTextUI(locale('collect_bag'))
+                    end
+
+                    if (IsControlJustPressed(0, 38) and not sync.isPlayerDead()) then
+                        showntextUI = false
+                        lib.hideTextUI()
+                        lib.requestAnimDict('pickup_object')
+                        TaskPlayAnim(cache.ped, 'pickup_object', 'pickup_low', 8.0, -8.0, -1, 0, 0, false, false, false)
+                        Wait(1000)
+                        PlaySoundFrontend(-1, 'ROBBERY_MONEY_TOTAL', 'HUD_FRONTEND_CUSTOM_SOUNDSET', true)
+                        DeleteEntity(bag)
+                        TriggerServerEvent('trase_storerobbery:server:collectBag', shop.store)
+                        break
                     end
                 else
                     if showntextUI then
                         showntextUI = false
                         lib.hideTextUI()
                     end
-    
-                    break
                 end
+            else
+                if showntextUI then
+                    showntextUI = false
+                    lib.hideTextUI()
+                end
+
+                break
             end
-        end)
-    end
+        end
+    end)
 end
 
 function sync.clearEntitys()
@@ -236,5 +274,108 @@ function sync.clearEntitys()
         DeleteEntity(v)
     end
 end
+
+function sync.addSafe(v, store)
+    local size = 0.7
+
+    exports.ox_target:addBoxZone({
+        coords = v.Safe.TargetCoords,
+        debug = false,
+        size = vec3(size, size, size + 0.2),
+        options = {
+            {
+                label = locale('safe_label'),
+                icon = locale('safe_icon'),
+                serverEvent = 'trase_storerobbery:server:openSafe',
+                args = store
+            }
+        }
+    })
+end
+
+local ANIMATION_LIB <const> = {
+    Begin = { dict = 'move_crouch_proto', anim = 'idle_intro' },
+    Loop = { dict = 'anim@amb@business@weed@weed_inspecting_lo_med_hi@', anim = 'weed_crouch_checkingleaves_idle_01_inspector' },
+    End = { dict = 'move_crouch_proto', anim = 'idle_transition' }
+}
+
+local function KeycardHack()
+    if Config.Safes.Hack == "howdy-hackminigame" then
+        return exports["howdy-hackminigame"]:Begin(4, 5000)
+    end
+
+    local p = promise.new()
+
+    if Config.Safes.Hack == "ps-ui" then
+        exports["ps-ui"]:Scrambler(function(success)
+            p:resolve(success)
+        end, "numeric", 30, 0)
+    elseif Config.Safes.Hack == "ultra-voltlab" then
+        TriggerEvent("ultra-voltlab", 30, function(outcome)
+            p:resolve(outcome == 1)
+        end)
+    elseif Config.Safes.Hack == "ultra-keypadhack" then
+        TriggerEvent("ultra-keypadhack", 2, 30, function(outcome)
+            p:resolve(outcome == 1)
+        end)
+    elseif Config.Safes.Hack == "datacrack" then
+        exports["datacrack"]:Start(3.5)
+    elseif Config.Safes.Hack == "utk_fingerprint" then
+        TriggerEvent("utk_fingerprint:Start", 2, 3, 2, function(success)
+            p:resolve(success)
+        end)
+    elseif Config.Safes.Hack == "electus_hacking" then
+        exports.electus_hacking:RunHack("binaryPuzzle", 2, 5, true, function(success)
+            p:resolve(success)
+        end)
+    end
+
+    return Citizen.Await(p)
+end
+
+RegisterNetEvent('trase_storerobbery:client:openSafe', function(coords, storeId)
+    if (GlobalState['trase_storerobbery:store:safe' .. storeId]) then
+        return Config.Notification({ type = 'error', title = locale('please_wait_safe'), message = locale('please_wait_safe_message') })
+    end
+
+    local playerPed = cache.ped
+
+    lib.requestAnimDict(ANIMATION_LIB.Begin.dict)
+    lib.requestAnimDict(ANIMATION_LIB.Loop.dict)
+    lib.requestAnimDict(ANIMATION_LIB.End.dict)
+
+    TaskPlayAnim(playerPed, ANIMATION_LIB.Begin.dict, ANIMATION_LIB.Begin.anim, 8.0, -8.0, -1, 0, 0, false, false, false)
+
+    Wait(1000)
+
+    local hacking = true
+
+    CreateThread(function()
+        success = KeycardHack()
+        Wait(1000)
+        if not success then
+            Config.Notification({ type = 'error', title = locale('safe_failed'), message = locale('safe_failed_message') })
+        end
+        Wait(1000)
+        hacking = false
+    end)
+ 
+    while hacking do
+        if not IsEntityPlayingAnim(playerPed, ANIMATION_LIB.Loop.dict, ANIMATION_LIB.Loop.anim, 3) then
+            SetEntityHeading(playerPed, coords.w)
+            TaskPlayAnim(playerPed, ANIMATION_LIB.Loop.dict, ANIMATION_LIB.Loop.anim, 8.0, -8.0, -1, 0, 0, false, false, false)
+        end
+
+        Wait(0)
+    end
+
+    TaskPlayAnim(playerPed, ANIMATION_LIB.End.dict, ANIMATION_LIB.End.anim, 8.0, -8.0, -1, 0, 0, false, false, false)
+    Wait(1000)
+    ClearPedTasks(playerPed)
+
+    if success then
+        TriggerServerEvent('trase_storerobbery:server:crackSafe', storeId)
+    end
+end)
 
 return sync

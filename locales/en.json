@@ -7,6 +7,20 @@
 
     "dispatch_label": "Dispatch:",
     "dispatch_description": "A suspect has been spotted robbing a store!",
-    "dispatch_brevity_code": "10-31"
+    "dispatch_brevity_code": "10-31",
 
+    "safe_icon": "fa-solid fa-vault",
+    "safe_label": "Crack Safe",
+
+    "safe_failed": "Failed!",
+    "safe_failed_message": "You failed to hack the safe!",
+
+    "please_wait_safe": "Cooldown",
+    "please_wait_safe_message": "This safe was recently hacked! Please try again later.",
+
+    "safe_crack_title": "Cracked Safe!",
+    "safe_crack_description": "You successfully cracked the safe, now run!",
+    
+    "safe_no_items": "Missing Items!",
+    "safe_no_items_message": "This safe requires specific tools, please go can get them!"
 }
