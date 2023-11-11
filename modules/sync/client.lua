@@ -120,6 +120,8 @@ function sync.robbingShop(shop)
 
         --     TaskShootAtEntity(entity, cache.ped, 1000, -1, 2685983626)
         -- end
+
+        -- Test
     else
         sync.handsUp(shop.entity)
 
