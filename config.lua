@@ -5,7 +5,7 @@ Config.Cooldown = 5 -- Time (in minutes) until the store is reset.
 Config.Target = true -- Enable 3-erd eye (requires: ox_target)
 
 Config.Progress = {
-    Duration = 2, -- Time in seconds it takes to complete the NPC robbery.
+    Duration = 180, -- Time in seconds it takes to complete the NPC robbery.
     Increases = { Aiming = 0.3, Shooting = 5.7 }, -- How much the progress increases when aiming or shooting.
     Bar = { -- Progress bar
         Enabled = true, -- Enable or disable the progress bar.

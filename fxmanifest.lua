@@ -14,7 +14,7 @@ shared_scripts {
 client_script 'client/client.lua'
 
 server_scripts {
-    '@oxmysql/lib/MySQL.lua',
+    'server/versions.lua',
     'server/server.lua'
 }
 
@@ -22,4 +22,11 @@ files {
     'modules/**/client.lua',
     'modules/**/server.lua',
     'locales/*.json'
+}
+
+escrow_ignore {
+    'modules/**/*.lua',
+    'locales/*.json',
+    'config.lua',
+    'server/versions.lua',
 }
