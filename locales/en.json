@@ -20,7 +20,10 @@
 
     "safe_crack_title": "Cracked Safe!",
     "safe_crack_description": "You successfully cracked the safe, now run!",
-    
+
     "safe_no_items": "Missing Items!",
-    "safe_no_items_message": "This safe requires specific tools, please go can get them!"
+    "safe_no_items_message": "This safe requires specific tools, please go can get them!",
+
+    "rouge_title": "Denied!",
+    "rouge_message": "The shop owner refuses to be robbed, he is fighting back!"
 }

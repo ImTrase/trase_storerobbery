@@ -54,6 +54,15 @@ local vector3 <const> = vector3
 local CreateThread <const> = CreateThread
 local IsControlJustPressed <const> = IsControlJustPressed
 local pairs <const> = pairs
+local GiveWeaponToPed <const> = GiveWeaponToPed
+local SetPedRelationshipGroupHash <const> = SetPedRelationshipGroupHash
+local SetPedRelationshipGroupDefaultHash <const> = SetPedRelationshipGroupDefaultHash
+local SetPedCombatAbility <const> = SetPedCombatAbility
+local TaskShootAtEntity <const> = TaskShootAtEntity
+local SetPedAccuracy <const> = SetPedAccuracy
+local exports <const> = exports
+local RegisterNetEvent <const> = RegisterNetEvent
+local ClearPedTasks <const> = ClearPedTasks
 
 function sync.createPed(Data)
     lib.requestModel(Data.Ped.Model)
@@ -157,11 +166,42 @@ function sync.robbingShop(shop)
     local isRobbing = true
 
     local startTime = GetGameTimer()
-    local baseSpeed = 1.0
     local speedAdjustment = 0.0
 
     local endTime = startTime + Config.Progress.Duration * 1000
     local progressBarTimer = startTime
+    local rougeSettings = Config.Stores[shop.store].Ped.Rouge
+    local rouge = false
+
+    if rougeSettings and rougeSettings.Enabled then
+        local chance = math.random(1, 100)
+        if chance <= rougeSettings.Chance then
+            rouge = true
+            local weapon = rougeSettings.Weapons[math.random(#rougeSettings.Weapons)]
+            GiveWeaponToPed(entity, weapon, 255, false, true)
+            SetBlockingOfNonTemporaryEvents(entity, false)
+
+            SetPedRelationshipGroupHash(entity, `ROGUE_OWNER`)
+            SetPedRelationshipGroupDefaultHash(entity, `ROGUE_OWNER`)
+            SetPedRelationshipGroupHash(ped, `ROGUE_OWNER`)
+            SetPedRelationshipGroupDefaultHash(ped, `ROGUE_OWNER`)
+
+            SetPedCombatAbility(entity, 100)
+            SetPedAlertness(entity, 3)
+            SetPedAccuracy(entity, 100)
+            SetPedFleeAttributes(entity, 0, false)
+
+            Config.Notification({ type = 'warning', title = locale('rouge_title'), message = locale('rouge_message') })
+
+            while not IsPedDeadOrDying(entity) and #(GetEntityCoords(ped) - GetEntityCoords(entity)) <= 7.5 and not sync.isPlayerDead() do
+                TaskShootAtEntity(entity, ped, 1000, `FIRING_PATTERN_FULL_AUTO`)
+                Wait(500)
+            end
+        end
+    end
+
+    if rouge then return end
+
     sync.handsUp(shop.entity)
 
     while isRobbing and not IsPedDeadOrDying(entity) and #(GetEntityCoords(ped) - GetEntityCoords(entity)) <= 7.5 and not sync.isPlayerDead() and progressBarTimer < endTime do
@@ -305,6 +345,7 @@ local function KeycardHack()
     end
 
     local p = promise.new()
+
 
     if Config.Safes.Hack == "ps-ui" then
         exports["ps-ui"]:Scrambler(function(success)

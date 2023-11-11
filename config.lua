@@ -54,6 +54,11 @@ Config.Stores = {
         Ped = {
             Model = `a_m_y_mexthug_01`,
             Position = vec4(2555.5, 380.8461, 107.6230, 0.0),
+            Rouge = {
+                Enabled = false,
+                Chance = 100, -- Percentage
+                Weapons = { `WEAPON_PISTOL`, `WEAPON_PUMPSHOTGUN`, `WEAPON_MICROSMG` },
+            },
             Rewards = {
                 ['black_money'] = { 25000, 50000 } -- Min, Max
             }
