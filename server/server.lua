@@ -46,10 +46,10 @@ RegisterNetEvent('trase_storerobbery:server:robberyStarted', function(storeId)
     local store = Config.Stores[storeId]
     if not store then return end
 
-    if Config.GlobalCooldown then
+    if Config.GlobalCooldown.Enabled then
         GlobalState.storeRobberyCooldown = storeId
 
-        SetTimeout(Config.GlobalCooldown * 60000, function()
+        SetTimeout(Config.GlobalCooldown.Time * 60000, function()
             GlobalState.storeRobberyCooldown = false
         end)
     end
@@ -136,10 +136,10 @@ RegisterNetEvent('trase_storerobbery:server:crackSafe', function(storeId)
         end)
     end
 
-    if Config.GlobalCooldown then
+    if Config.GlobalCooldown.Enabled then
         GlobalState.storeRobberyCooldown = storeId
 
-        SetTimeout(Config.GlobalCooldown * 60000, function()
+        SetTimeout(Config.GlobalCooldown.Time * 60000, function()
             GlobalState.storeRobberyCooldown = false
         end)
     end

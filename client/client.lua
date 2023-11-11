@@ -127,7 +127,7 @@ CreateThread(function()
                             while not RequestScriptAudioBank("ALARM_KLAXON_03", false, -1) do
                                 Wait(0)
                             end
-                            PlaySoundFromCoord(createdSounds[k], "ALARMS_KLAXON_03_FAR", v.Ped.Position, 0, true, 200, 0)
+                            PlaySoundFromCoord(createdSounds[k], "ALARMS_KLAXON_03_FAR", v.Ped.Position.xyz, 0, true, 200, 0)
                         end
                     end
                 elseif (cachedAlarms[k]) then
