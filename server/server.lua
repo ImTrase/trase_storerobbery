@@ -89,7 +89,8 @@ RegisterNetEvent('trase_storerobbery:server:openSafe', function(data)
     end
 
     sync.alertPolice(store.Ped.Position)
-    TriggerClientEvent('trase_storerobbery:client:openSafe', src, store.Safe.AnimStart, storeId)
+    local where = Config.Target and store.Safe.TargetCoords or store.Safe.MarkerCoords
+    TriggerClientEvent('trase_storerobbery:client:openSafe', src, where, storeId)
 
     if Config.Safes.CooldownOnAttempt then
         GlobalState['trase_storerobbery:store:safe' .. storeId] = true
@@ -105,7 +106,7 @@ RegisterNetEvent('trase_storerobbery:server:crackSafe', function(storeId)
     local store = Config.Stores[storeId]
     if not store then return end
 
-    local coords = store.Safe.AnimStart
+    local coords = Config.Target and store.Safe.TargetCoords or store.Safe.MarkerCoords
     local ped = GetPlayerPed(src)
     local dist = #(coords.xyz - GetEntityCoords(ped).xyz)
 

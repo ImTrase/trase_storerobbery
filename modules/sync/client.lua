@@ -324,7 +324,8 @@ function sync.addSafe(v, store)
 
         exports.ox_target:addBoxZone({
             coords = v.Safe.TargetCoords,
-            debug = false,
+            debug = true,
+            rotation = v.Safe.TargetRotation or 0.0,
             size = vec3(size, size, size + 0.2),
             options = {
                 {

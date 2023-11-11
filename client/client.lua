@@ -6,12 +6,12 @@ lib.locale()
 
 CreateThread(function()
     for k, v in pairs(Config.Stores) do
-        local ped = sync.createPed(v)
-        local coords = GetEntityCoords(ped)
-
-        sync.replaceRegister(coords)
-
-        createdAssets[#createdAssets +1] = { entity = ped, store = k }
+        if v.Ped.Enabled then
+            local ped = sync.createPed(v)
+            local coords = GetEntityCoords(ped)
+            sync.replaceRegister(coords)
+            createdAssets[#createdAssets +1] = { entity = ped, store = k }
+        end
 
         if v.Safe.Enabled then
             sync.addSafe(v, k)
