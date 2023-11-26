@@ -14,9 +14,7 @@ function sync.alertPolice(coords)
                 code = locale("dispatch_label"),
                 snippet = locale("dispatch_brevity_code")
             },
-            message = locale("dispatch_description", {
-                bank = bank.name
-            }),
+            message = locale("dispatch_description"),
             flashes = true,
             image = nil,
             blip = {
@@ -30,9 +28,7 @@ function sync.alertPolice(coords)
         })
     elseif GetResourceState("ps-dispatch") == "started" then
         TriggerEvent("ps-dispatch:server:notify", {
-            message = locale("dispatch_description", {
-                bank = bank.name
-            }),
+            message = locale("dispatch_description"),
             codeName = locale("dispatch_label"),
             code = locale("dispatch_brevity_code"),
             icon = "fas fa-vault",
@@ -45,9 +41,7 @@ function sync.alertPolice(coords)
             job_table = Config.PoliceJobs,
             coords = coords,
             title = locale("dispatch_label"),
-            message = locale("dispatch_description", {
-                bank = bank.name
-            }),
+            message = locale("dispatch_description"),
             flash = 0,
             unique_id = tostring(math.random(0000000,9999999)),
             sound = 1,

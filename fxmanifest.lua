@@ -28,5 +28,8 @@ escrow_ignore {
     'modules/**/*.lua',
     'locales/*.json',
     'config.lua',
+    'config.server.lua',
     'server/versions.lua',
+    'server/*.lua',
+    'client/*.lua',
 }
