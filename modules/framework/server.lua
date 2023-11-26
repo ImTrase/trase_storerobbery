@@ -93,7 +93,12 @@ elseif Config.Framework == 'qbcore' then
             if item == money_found then
                 player.Functions.AddMoney(item, amount)
             else
-                player.Functions.AddItem(item, amount)
+                if item == 'markedbills' then
+                    local info = { worth = amount }
+                    player.Functions.AddItem(item, 1, false, info)
+                else
+                    player.Functions.AddItem(item, amount)
+                end
             end
         end
     end
