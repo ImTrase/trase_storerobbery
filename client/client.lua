@@ -2,6 +2,9 @@ local sync = require 'modules.sync.client'
 local Framework = require 'modules.framework.client'
 
 local createdAssets = {}
+local cachedAlarms = {}
+local createdSounds = {}
+
 lib.locale()
 
 CreateThread(function()
@@ -88,9 +91,6 @@ RegisterNetEvent('trase_storerobbery:client:alertPolice', function(coords)
 end)
 
 RegisterNetEvent('trase_storerobbery:client:notify', Config.Notification)
-
-local cachedAlarms = {}
-local createdSounds = {}
 
 RegisterNetEvent('trase_storerobbery:client:setStore', function(storeId, state)
     local store = Config.Stores[storeId]
