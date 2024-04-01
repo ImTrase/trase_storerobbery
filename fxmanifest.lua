@@ -4,7 +4,7 @@ game 'gta5'
 author 'Trase'
 description 'An advanced and unique store robbery for your FiveM server.'
 lua54 'yes'
-version '1.0.1'
+version '1.0.2'
 
 shared_scripts {
     '@ox_lib/init.lua',
