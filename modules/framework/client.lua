@@ -1,6 +1,8 @@
 local FRAMEWORK = {}
 local ESX, QBCore
 
+local PLAYERCONNECTED = false
+
 local function loadESX()
     local _, ESX = pcall(function()
         return exports['es_extended']:getSharedObject()
@@ -12,6 +14,14 @@ local function loadESX()
         end)
     end
 
+    if ESX then
+        -- Register Spawn Event
+        RegisterNetEvent('esx:playerLoaded')
+        AddEventHandler('esx:playerLoaded', function(xPlayer)
+            PLAYERCONNECTED = true
+        end)
+    end
+
     return ESX
 end
 
@@ -19,6 +29,20 @@ local function loadQBCore()
     local _, QBCore = pcall(function()
         return exports['qb-core']:GetCoreObject()
     end)
+
+    if not QBCore then
+        AddEventHandler('QBCore:GetObject', function(obj)
+            QBCore = obj
+        end)
+    end
+
+    if QBCore then
+        -- Register Spawn Event
+        RegisterNetEvent('QBCore:Client:OnPlayerLoaded')
+        AddEventHandler('QBCore:Client:OnPlayerLoaded', function()
+            PLAYERCONNECTED = true
+        end)
+    end
 
     return QBCore
 end
@@ -34,11 +58,13 @@ end
 if Config.Framework == 'esx' then
     ESX = loadESX()
     FRAMEWORK.getJob = function()
+        while not PLAYERCONNECTED do Wait(100) end
         return ESX.GetPlayerData().job.name
     end
 elseif Config.Framework == 'qbcore' then
     QBCore = loadQBCore()
     FRAMEWORK.getJob = function()
+        while not PLAYERCONNECTED do Wait(100) end
         return QBCore.Functions.GetPlayerData().job.name
     end
 end

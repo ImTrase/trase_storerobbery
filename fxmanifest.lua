@@ -30,6 +30,4 @@ escrow_ignore {
     'config.lua',
     'config.server.lua',
     'server/versions.lua',
-    'server/*.lua',
-    'client/*.lua',
 }
