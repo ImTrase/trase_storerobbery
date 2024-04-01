@@ -1,5 +1,7 @@
 {
     "shoot_help_text": "Shoot to scare the shop owner.",
+    "no_robbery": "No Robbery!",
+    "no_robbery_message": "You cannot rob the safe unless you rob the store!",
     "collect_bag": "[E] - Collect Bag.",
     "open_safe": "[E] - Hack Safe.",
     "bag_pickup_title": "Collected Bag!",

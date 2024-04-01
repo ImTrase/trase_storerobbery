@@ -50,6 +50,7 @@ Config.Safes = { -- Safe Configuration
     Hack = 'ps-ui', -- Hacking minigame, see below for a list of minigames.
     Cooldown = 5, -- Time (in minutes) until the safe is reset.
     CooldownOnAttempt = true, -- Enable cooldown as soon as a player attempts to open the safe.
+    MustRob = true, -- If true, the store must be robbed before the safe can be opened.
 }
 
 Config.PoliceJobs = { 'police', 'sheriff' } -- Used in disatch, dispatch can be edited in modules/sync/server.lua

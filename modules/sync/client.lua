@@ -2,6 +2,8 @@ local sync = {}
 local createdEntitys = {}
 local crackingSafe = false
 
+local ROBBINGSTORE = false
+
 -- Declaring all used natives (performance)
 local CreatePed <const> = CreatePed
 local SetEntityHeading <const> = SetEntityHeading
@@ -146,6 +148,7 @@ end
 
 function sync.failedRobbery(shop)
     TriggerServerEvent('trase_storerobbery:server:robberyFailed', shop.store)
+    ROBBINGSTORE = false
     SetTimeout(Config.Cooldown * 60000, function()
         DeleteEntity(shop.entity)
 
@@ -164,7 +167,7 @@ end
 function sync.robbingShop(shop)
     TriggerServerEvent('trase_storerobbery:server:robberyStarted', shop.store, shop.entity)
     local entity, ped = shop.entity, cache.ped
-    local isRobbing = true
+    ROBBINGSTORE = true
 
     local startTime = GetGameTimer()
     local speedAdjustment = 0.0
@@ -205,7 +208,7 @@ function sync.robbingShop(shop)
 
     sync.handsUp(shop.entity)
 
-    while isRobbing and not IsPedDeadOrDying(entity) and #(GetEntityCoords(ped) - GetEntityCoords(entity)) <= 7.5 and not sync.isPlayerDead() and progressBarTimer < endTime do
+    while ROBBINGSTORE and not IsPedDeadOrDying(entity) and #(GetEntityCoords(ped) - GetEntityCoords(entity)) <= 7.5 and not sync.isPlayerDead() and progressBarTimer < endTime do
         Wait(0)
 
         draw2dText()
@@ -416,6 +419,11 @@ local function KeycardHack()
 end
 
 RegisterNetEvent('trase_storerobbery:client:openSafe', function(coords, storeId)
+    if Config.Safes.MustRob then
+        if not ROBBINGSTORE then
+            return Config.Notification({ type = 'error', title = locale('no_robbery'), message = locale('no_robbery_message') })
+        end
+    end
     if (GlobalState['trase_storerobbery:store:safe' .. storeId]) then
         crackingSafe = false
         return Config.Notification({ type = 'error', title = locale('please_wait_safe'), message = locale('please_wait_safe_message') })
