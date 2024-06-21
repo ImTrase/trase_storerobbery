@@ -72,6 +72,14 @@ if Config.Framework == 'esx' then
             end
         end
     end
+
+    FRAMEWORK.countPolice = function()
+        local count = 0
+        for k, job in pairs(Config.PoliceJobs) do
+            count += #ESX.GetExtendedPlayers('job', job)
+        end
+        return count
+    end
 elseif Config.Framework == 'qbcore' then
     QBCore = loadQBCore()
 
@@ -117,6 +125,20 @@ elseif Config.Framework == 'qbcore' then
                 return itemData.count or itemData.amount or 0
             end
         end
+    end
+
+    FRAMEWORK.countPolice = function() -- Maybe a better way to do this?
+        local count = 0
+        local players = QBCore.Functions.GetPlayers()
+    
+        for _, playerId in ipairs(players) do
+            local xPlayer = QBCore.Functions.GetPlayer(playerId)
+            if xPlayer.PlayerData.job.name == 'police' then
+                count += 1
+            end
+        end
+
+        return count
     end
 end
 

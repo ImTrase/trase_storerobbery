@@ -13,6 +13,11 @@ CreateThread(function()
     for k, v in pairs(Config.Stores) do
         GlobalState['trase_storerobbery:store:safe' .. k] = false
     end
+
+    while true do
+        TriggerClientEvent('trase_storerobbery:client:syncPolice', -1, Framework.countPolice())
+        Wait(10000)
+    end
 end)
 
 RegisterNetEvent('trase_storerobbery:server:collectBag', function(storeId)

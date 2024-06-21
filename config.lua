@@ -53,6 +53,8 @@ Config.Safes = { -- Safe Configuration
     MustRob = true, -- If true, the store must be robbed before the safe can be opened.
 }
 
+Config.NeededPolice = 2 -- The amount of police needed to rob a store.
+
 Config.PoliceJobs = { 'police', 'sheriff' } -- Used in disatch, dispatch can be edited in modules/sync/server.lua
 Config.Alarm = {
     Enabled = true, -- Enable or disable the alarm.

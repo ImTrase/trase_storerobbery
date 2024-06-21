@@ -5,6 +5,12 @@ local createdAssets = {}
 local cachedAlarms = {}
 local createdSounds = {}
 
+local activePd = 0
+
+RegisterNetEvent('trase_storerobbery:client:syncPolice', function(count)
+    activePd = count
+end)
+
 lib.locale()
 
 CreateThread(function()
@@ -27,7 +33,7 @@ CreateThread(function()
         local armed = sync.isPlayerArmed()
         local job = Framework.getJob()
 
-        if armed and not Config.BlacklistedJobs[job] and not GlobalState.storeRobberyCooldown then
+        if armed and not Config.BlacklistedJobs[job] and not GlobalState.storeRobberyCooldown and activePd >= Config.NeededPolice then
             local aiming = IsPlayerFreeAiming(cache.playerId)
             if aiming then
                 for _, shop in pairs(createdAssets) do
